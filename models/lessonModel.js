@@ -8,7 +8,7 @@ const lessonSchema = mongoose.Schema({
     },
     topic:{
         type: String,
-        required: [true, 'Please add a title']
+        required: [true, 'Please add a topic']
     },
     course:{
         type: String,
