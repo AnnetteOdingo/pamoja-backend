@@ -18,6 +18,12 @@ const setBug = asyncHandler(async (req, res) => {
     course,
     user: req.user.id,
   });
+  
+  const user = await User.findById(bug.user);
+  user.credits += 5
+  await User.findByIdAndUpdate(req.user.id, user, {
+    new: true,
+  });
   res.status(200).json(bug);
 });
 const deleteBug = asyncHandler(async (req, res) => {
@@ -54,7 +60,12 @@ const updateBug = asyncHandler(async (req, res) => {
     res.status(400);
     throw new Error("Bug not found");
   }
+  
   const updatedBug = await Bug.findByIdAndUpdate(req.params.id, req.body, {
+    new: true,
+  });
+  user.credits += 2
+  await User.findByIdAndUpdate(req.user.id, user, {
     new: true,
   });
   res.status(200).json(updatedBug);
