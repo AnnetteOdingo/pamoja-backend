@@ -78,7 +78,11 @@ const purchaseBook = asyncHandler(async (req, res) => {
     res.status(400);
     throw new Error("Book not found");
   }
-  if (tyepeof(book.purchaseId ) == String) {
+  if (book.purchaseId.length > 2 || book.purchaseId) {
+    res.status(401);
+    throw new Error("Sorry book has already been purchased!");
+  }
+  if (user.credits < 50) {
     res.status(401);
     throw new Error("Sorry you don't have enough credits!");
   }
@@ -104,10 +108,6 @@ const giveBook = asyncHandler(async (req, res) => {
   if (!buyer) {
     res.status(401);
     throw new Error("Buyer not found!");
-  }
-  if (buyer.credits < 50) {
-    res.status(401);
-    throw new Error("Sorry you don't have enough points!");
   }
   user.credits += 50;
   buyer.credits -= 50;
