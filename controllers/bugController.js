@@ -45,10 +45,10 @@ const updateBug = asyncHandler(async (req, res) => {
     res.status(401);
     throw new Error("User not found!");
   }
-  if (bug.user.toString() !== user.id) {
-    res.status(401);
-    throw new Error("User not authorized");
-  }
+//   if (bug.user.toString() !== user.id) {
+//     res.status(401);
+//     throw new Error("User not authorized");
+//   }
 
   if (!bug) {
     res.status(400);
