@@ -62,6 +62,74 @@ const updateBook = asyncHandler(async (req, res) => {
   });
   res.status(200).json(updatedBook);
 });
+const purchaseBook = asyncHandler(async (req, res) => {
+  const user = await User.findById(req.user.id);
+  const book = await Book.findById(req.params.id);
+  if (!user) {
+    res.status(401);
+    throw new Error("User not found!");
+  }
+  if (book.user.toString() == user.id) {
+    res.status(401);
+    throw new Error("User not authorized");
+  }
 
+  if (!book) {
+    res.status(400);
+    throw new Error("Book not found");
+  }
+  if (tyepeof(book.purchaseId ) == String) {
+    res.status(401);
+    throw new Error("Sorry you don't have enough credits!");
+  }
+  await Book.findByIdAndUpdate(req.params.id, req.body, {
+    new: true,
+  });
+  res.status(200).json({ data: "book purchase successful" });
+});
+const giveBook = asyncHandler(async (req, res) => {
+  const user = await User.findById(req.user.id);
+  const book = await Book.findById(req.params.id);
+  const buyer = await User.findById(book.purchaseId);
+  if (!user) {
+    res.status(401);
+    throw new Error("User not found!");
+  }
 
-module.exports = { getBooks, setBook, updateBook, deleteBook };
+  if (!book) {
+    res.status(400);
+    throw new Error("Book not found");
+  }
+
+  if (!buyer) {
+    res.status(401);
+    throw new Error("Buyer not found!");
+  }
+  if (buyer.credits < 50) {
+    res.status(401);
+    throw new Error("Sorry you don't have enough points!");
+  }
+  user.credits += 50;
+  buyer.credits -= 50;
+
+  
+  await User.findByIdAndUpdate(req.user.id, user, {
+    new: true,
+  });
+  await User.findByIdAndUpdate(book.purchaseId, buyer, {
+    new: true,
+  });
+  await Book.findByIdAndUpdate(req.params.id, req.body, {
+    new: true,
+  });
+  
+  res.status(200).json({ data: "book exchange successful" });
+});
+module.exports = {
+  getBooks,
+  setBook,
+  updateBook,
+  deleteBook,
+  purchaseBook,
+  giveBook,
+};

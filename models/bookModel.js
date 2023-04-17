@@ -16,12 +16,13 @@ const bookSchema = mongoose.Schema(
       required: [true, "Please add a book description"],
     },
     location: {
-        type: String,
-        required: [true, "Please add a pickup location"],
-      },
+      type: String,
+      required: [true, "Please add a pickup location"],
+    },
     photo: {
       type: String,
-      default: 'https://static.vecteezy.com/system/resources/previews/000/541/091/large_2x/green-book-on-white-background-vector.jpg',
+      default:
+        "https://static.vecteezy.com/system/resources/previews/000/541/091/large_2x/green-book-on-white-background-vector.jpg",
     },
     author: {
       type: String,
@@ -36,12 +37,15 @@ const bookSchema = mongoose.Schema(
       default: [],
     },
     tags: {
-        type: [String],
-        default: [],
-      },
-    isEchanged: {
+      type: [String],
+      default: [],
+    },
+    purchaseId: {
       type: String,
-      default: 'false',
+    },
+    isExchanged: {
+      type: Boolean,
+      default: "false",
     },
   },
   { timestamps: true }

@@ -65,5 +65,9 @@ const loginUser = asyncHandler(async (req, res) => {
 const generateToken = (id) => {
   return jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: "30d" });
 };
+const getUserDetails =asyncHandler(async(req, res)=>{
+  const user = await User.findById(req.user.id);
+  res.status(200).json(user)
+})
 
-module.exports = { registerUser, updateUserInfo, loginUser };
+module.exports = { registerUser, updateUserInfo, loginUser, getUserDetails };
