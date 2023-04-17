@@ -41,17 +41,12 @@ const deleteBook = asyncHandler(async (req, res) => {
   res.status(200).json({ id: req.params });
 });
 const updateBook = asyncHandler(async (req, res) => {
-  console.log("updating book");
   const user = await User.findById(req.user.id);
   const book = await Book.findById(req.params.id);
   if (!user) {
     res.status(401);
     throw new Error("User not found!");
   }
-  //   if (book.user.toString() !== user.id) {
-  //     res.status(401);
-  //     throw new Error("User not authorized");
-  //   }
 
   if (!book) {
     res.status(400);

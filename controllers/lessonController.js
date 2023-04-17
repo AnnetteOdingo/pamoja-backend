@@ -45,10 +45,6 @@ const updateLesson = asyncHandler(async (req, res) => {
     res.status(401);
     throw new Error("User not found!");
   }
-  //   if (lesson.user.toString() !== user.id) {
-  //     res.status(401);
-  //     throw new Error("User not authorized");
-  //   }
 
   if (!lesson) {
     res.status(400);
