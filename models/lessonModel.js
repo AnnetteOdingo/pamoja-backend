@@ -21,7 +21,10 @@ const lessonSchema = mongoose.Schema({
     isTaught:{
         type: Boolean,
         default: false
-    }
+    },
+    teachId: {
+        type: String,
+      },
 
 
 }, {timestamps: true})
