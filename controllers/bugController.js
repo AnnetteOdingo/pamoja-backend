@@ -1,9 +1,10 @@
 const Bug = require("../models/bugModel");
 const User = require("../models/userModel");
+const Comment = require("../models/commentModel");
 const asyncHandler = require("express-async-handler");
 
 const getBugs = asyncHandler(async (req, res) => {
-  const bugs = await Bug.find();
+  const bugs = await Bug.find().populate('comments');
   res.status(200).json(bugs);
 });
 const setBug = asyncHandler(async (req, res) => {
@@ -18,9 +19,9 @@ const setBug = asyncHandler(async (req, res) => {
     course,
     user: req.user.id,
   });
-  
+
   const user = await User.findById(bug.user);
-  user.credits += 5
+  user.credits += 5;
   await User.findByIdAndUpdate(req.user.id, user, {
     new: true,
   });
@@ -56,15 +57,27 @@ const updateBug = asyncHandler(async (req, res) => {
     res.status(400);
     throw new Error("Bug not found");
   }
-  
+
   const updatedBug = await Bug.findByIdAndUpdate(req.params.id, req.body, {
     new: true,
   });
-  user.credits += 2
+  user.credits += 2;
   await User.findByIdAndUpdate(req.user.id, user, {
     new: true,
   });
   res.status(200).json(updatedBug);
 });
 
-module.exports = { getBugs, setBug, updateBug, deleteBug };
+const addComment = asyncHandler(async (req, res) => {
+  const bug = await Bug.findById(req.params.id).populate('comments');
+  const comment = new Comment({
+    comment: req.body.comment,
+    postedBy: req.body.userId,
+  });
+  bug.comments.push(comment);
+  await comment.save();
+  await bug.save();
+  res.status(201).send(comment);
+});
+
+module.exports = { getBugs, setBug, updateBug, deleteBug, addComment };

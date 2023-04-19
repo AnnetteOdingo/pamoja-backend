@@ -32,10 +32,10 @@ const bookSchema = mongoose.Schema(
       type: String,
       required: [true, "Please add book edition"],
     },
-    comments: {
-      type: [String],
-      default: [],
-    },
+    // comments: {
+    //   type: [String],
+    //   default: [],
+    // },
     tags: {
       type: [String],
       default: [],
@@ -46,6 +46,15 @@ const bookSchema = mongoose.Schema(
     isExchanged: {
       type: Boolean,
       default: "false",
+    },
+    comments: [{ type: mongoose.Schema.Types.ObjectId, ref: "Comment" }],
+  },
+  {
+    toJSON: {
+      virtuals: true,
+    },
+    toObject: {
+      virtuals: true,
     },
   },
   { timestamps: true }

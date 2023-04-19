@@ -1,9 +1,10 @@
 const Lesson = require("../models/lessonModel");
 const User = require("../models/userModel");
+const Comment = require("../models/commentModel");
 const asyncHandler = require("express-async-handler");
 
 const getLessons = asyncHandler(async (req, res) => {
-  const lessons = await Lesson.find();
+  const lessons = await Lesson.find().populate("comments");
   res.status(200).json(lessons);
 });
 
@@ -26,12 +27,12 @@ const deleteLesson = asyncHandler(async (req, res) => {
   if (!user) {
     res.status(401);
     throw new Error("User not found!");
-  } 
+  }
   if (!lesson) {
     res.status(400);
     throw new Error("Lesson not found");
   }
-   if (lesson.user.toString() !== user.id) {
+  if (lesson.user.toString() !== user.id) {
     res.status(401);
     throw new Error("User not authorized");
   }
@@ -121,6 +122,17 @@ const takeLesson = asyncHandler(async (req, res) => {
 
   res.status(200).json({ data: "Lesson was successful" });
 });
+const addComment = asyncHandler(async (req, res) => {
+  const lesson = await Lesson.findById(req.params.id).populate("comments");
+  const comment = new Comment({
+    comment: req.body.comment,
+    postedBy: req.body.userId,
+  });
+  lesson.comments.push(comment);
+  await comment.save();
+  await lesson.save();
+  res.status(201).send(comment);
+});
 
 module.exports = {
   getLessons,
@@ -129,4 +141,5 @@ module.exports = {
   deleteLesson,
   takeLesson,
   teachLesson,
+  addComment,
 };

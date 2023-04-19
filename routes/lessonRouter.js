@@ -7,6 +7,7 @@ const {
   deleteLesson,
   teachLesson,
   takeLesson,
+  addComment,
 } = require("../controllers/lessonController");
 const { authCheck } = require("../middleware/authMiddleware");
 
@@ -16,4 +17,5 @@ router.put("/:id", authCheck, updateLesson);
 router.put("/teach/:id", authCheck, teachLesson);
 router.put("/attend/:id", authCheck, takeLesson);
 router.delete("/:id", authCheck, deleteLesson);
+router.put("/:id/comments", authCheck, addComment);
 module.exports = router;

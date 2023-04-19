@@ -1,9 +1,10 @@
 const Book = require("../models/bookModel");
 const User = require("../models/userModel");
+const Comment = require("../models/commentModel");
 const asyncHandler = require("express-async-handler");
 
 const getBooks = asyncHandler(async (req, res) => {
-  const books = await Book.find();
+  const books = await Book.find().populate("comments");
   res.status(200).json(books);
 });
 const setBook = asyncHandler(async (req, res) => {
@@ -120,6 +121,17 @@ const giveBook = asyncHandler(async (req, res) => {
   
   res.status(200).json({ data: "book exchange successful" });
 });
+const addComment = asyncHandler(async (req, res) => {
+  const book = await Book.findById(req.params.id).populate("comments");
+  const comment = new Comment({
+    comment: req.body.comment,
+    postedBy: req.body.userId,
+  });
+  book.comments.push(comment);
+  await comment.save();
+  await book.save();
+  res.status(201).send(comment);
+});
 module.exports = {
   getBooks,
   setBook,
@@ -127,4 +139,5 @@ module.exports = {
   deleteBook,
   purchaseBook,
   giveBook,
+  addComment,
 };
