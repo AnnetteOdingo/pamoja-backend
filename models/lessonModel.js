@@ -15,6 +15,10 @@ const lessonSchema = mongoose.Schema(
       type: String,
       required: [true, "Please add a course"],
     },
+    description: {
+      type: String,
+      required: [true, "Please add a description"],
+    },
     // comments:{
     //     type: [String],
     //     default: []
