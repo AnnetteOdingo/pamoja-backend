@@ -123,9 +123,11 @@ const giveBook = asyncHandler(async (req, res) => {
 });
 const addComment = asyncHandler(async (req, res) => {
   const book = await Book.findById(req.params.id).populate("comments");
+  const poster = await User.findById(req.params.body)
   const comment = new Comment({
     comment: req.body.comment,
-    postedBy: req.body.userId,
+    userAvatar: poster.avatarUrl,
+    username: poster.name
   });
   book.comments.push(comment);
   await comment.save();
