@@ -108,7 +108,6 @@ const giveBook = asyncHandler(async (req, res) => {
   user.credits += 50;
   buyer.credits -= 50;
 
-  
   await User.findByIdAndUpdate(req.user.id, user, {
     new: true,
   });
@@ -118,16 +117,16 @@ const giveBook = asyncHandler(async (req, res) => {
   await Book.findByIdAndUpdate(req.params.id, req.body, {
     new: true,
   });
-  
+
   res.status(200).json({ data: "book exchange successful" });
 });
 const addComment = asyncHandler(async (req, res) => {
   const book = await Book.findById(req.params.id).populate("comments");
-  const poster = await User.findById(req.params.body)
+  const poster = await User.findById(req.body.userId);
   const comment = new Comment({
     comment: req.body.comment,
     userAvatar: poster.avatarUrl,
-    username: poster.name
+    username: poster.name,
   });
   book.comments.push(comment);
   await comment.save();
