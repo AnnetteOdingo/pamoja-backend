@@ -18,6 +18,9 @@ const userSchema = mongoose.Schema(
       type: Number,
       default: 100,
     },
+    avatarUrl: {
+      type: String
+    },
   },
   { timestamps: true }
 );
