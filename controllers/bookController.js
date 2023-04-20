@@ -8,8 +8,8 @@ const getBooks = asyncHandler(async (req, res) => {
   res.status(200).json(books);
 });
 const setBook = asyncHandler(async (req, res) => {
-  const { title, description, author, edition, location } = req.body;
-  if (!title || !description || !author || !edition || !location) {
+  const { title, description, author, edition, location, photo } = req.body;
+  if (!title || !description || !author || !edition || !location || !photo) {
     res.status(400);
     throw new Error("Please add new fields");
   }
@@ -20,6 +20,7 @@ const setBook = asyncHandler(async (req, res) => {
     edition,
     location,
     user: req.user.id,
+    photo,
   });
   res.status(200).json(book);
 });
@@ -60,7 +61,7 @@ const updateBook = asyncHandler(async (req, res) => {
 });
 const purchaseBook = asyncHandler(async (req, res) => {
   const user = await User.findById(req.user.id);
-  const book = await Book.findById(req.params.id);
+  const book = await Book.findById(req.params.id);  
   if (!user) {
     res.status(401);
     throw new Error("User not found!");
@@ -74,7 +75,7 @@ const purchaseBook = asyncHandler(async (req, res) => {
     res.status(400);
     throw new Error("Book not found");
   }
-  if (book.purchaseId.length > 2 || book.purchaseId) {
+  if ( book.purchaseId && book.purchaseId.length > 2 && book.isExchanged ) {
     res.status(401);
     throw new Error("Sorry book has already been purchased!");
   }

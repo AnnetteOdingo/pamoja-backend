@@ -21,8 +21,6 @@ const bookSchema = mongoose.Schema(
     },
     photo: {
       type: String,
-      default:
-        "https://static.vecteezy.com/system/resources/previews/000/541/091/large_2x/green-book-on-white-background-vector.jpg",
     },
     author: {
       type: String,

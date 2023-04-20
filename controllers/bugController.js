@@ -70,7 +70,7 @@ const updateBug = asyncHandler(async (req, res) => {
 
 const addComment = asyncHandler(async (req, res) => {
   const bug = await Bug.findById(req.params.id).populate('comments');
-  const poster = await User.findById(req.params.body)
+  const poster = await User.findById(req.body.userId);
   const comment = new Comment({
     comment: req.body.comment,
     userAvatar: poster.avatarUrl,
