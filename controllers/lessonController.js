@@ -9,14 +9,15 @@ const getLessons = asyncHandler(async (req, res) => {
 });
 
 const setLesson = asyncHandler(async (req, res) => {
-  const { topic, course } = req.body;
-  if (!topic || !course) {
+  const { topic, course, description } = req.body;
+  if (!topic || !course || !description) {
     res.status(400);
     throw new Error("Please add new fields");
   }
   const lesson = await Lesson.create({
     topic,
     course,
+    description,
     user: req.user.id,
   });
   res.status(200).json(lesson);
@@ -61,7 +62,7 @@ const updateLesson = asyncHandler(async (req, res) => {
   res.status(200).json(updatedLesson);
 });
 const teachLesson = asyncHandler(async (req, res) => {
-  const user = await User.findById(req.user.id);
+  const user = await User.findById(req.body.teachId);
   const lesson = await Lesson.findById(req.params.id);
   if (!user) {
     res.status(401);
@@ -75,7 +76,7 @@ const teachLesson = asyncHandler(async (req, res) => {
     res.status(401);
     throw new Error("User not authorized");
   }
-  if (lesson.teachId.length > 2 || lesson.teachId) {
+  if ( lesson.teachId && lesson.teachId.length > 2 && lesson.isTaught ) {
     res.status(401);
     throw new Error("Sorry lesson has already been taught!");
   }
