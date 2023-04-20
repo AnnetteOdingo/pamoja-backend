@@ -61,7 +61,7 @@ const updateBug = asyncHandler(async (req, res) => {
   const updatedBug = await Bug.findByIdAndUpdate(req.params.id, req.body, {
     new: true,
   });
-  user.credits += 2;
+  
   await User.findByIdAndUpdate(req.user.id, user, {
     new: true,
   });
@@ -76,9 +76,12 @@ const addComment = asyncHandler(async (req, res) => {
     userAvatar: poster.avatarUrl,
     username: poster.name
   });
+  poster.credits += 2;
+  console.log('i ran')
   bug.comments.push(comment);
   await comment.save();
   await bug.save();
+  await poster.save();
   res.status(201).send(comment);
 });
 
